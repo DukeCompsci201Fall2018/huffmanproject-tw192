@@ -99,7 +99,7 @@ public class HuffProcessor {
 			// and left, right subtrees
 			
 			// Is the following 0 value correct?
-			HuffNode t = new HuffNode(-1, left.myWeight + right.myWeight, left, right);
+			HuffNode t = new HuffNode(0, left.myWeight + right.myWeight, left, right);
 			pq.add(t);
 		}
 		HuffNode root = pq.remove();
@@ -148,14 +148,17 @@ public class HuffProcessor {
 	
 	private void writeCompressedBits(String[] codings, BitInputStream in, BitOutputStream out) {
 		String code = "";
-		int bit = in.readBits(BITS_PER_WORD);
-		if (bit == PSEUDO_EOF) {
-			code = codings[PSEUDO_EOF];
+		
+		while (true) {
+			int bit = in.readBits(BITS_PER_WORD);
+			if (bit == PSEUDO_EOF) {
+				code = codings[PSEUDO_EOF];
+				out.writeBits(code.length(), Integer.parseInt(code, 2));
+				return;
+			}
+			code = codings[bit];
 			out.writeBits(code.length(), Integer.parseInt(code, 2));
-			return;
 		}
-		code = codings[bit];
-		out.writeBits(code.length(), Integer.parseInt(code, 2));
 	}
 	
 	/**
