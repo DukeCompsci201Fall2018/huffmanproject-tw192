@@ -99,7 +99,7 @@ public class HuffProcessor {
 			// and left, right subtrees
 			
 			// Is the following 0 value correct?
-			HuffNode t = new HuffNode(0, left.myWeight + right.myWeight, left, right);
+			HuffNode t = new HuffNode(-1, left.myWeight + right.myWeight, left, right);
 			pq.add(t);
 		}
 		HuffNode root = pq.remove();
