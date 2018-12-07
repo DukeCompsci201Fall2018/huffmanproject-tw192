@@ -139,7 +139,7 @@ public class HuffProcessor {
 		}
 		if (root.myLeft == null && root.myRight == null) {
 			out.writeBits(BITS_PER_INT, 1);
-			out.writeBits(BITS_PER_WORD, root.myValue);
+			out.writeBits(BITS_PER_WORD + 1, root.myValue);
 		}
 		out.writeBits(BITS_PER_INT, 0);
 		writeHeader(root.myLeft, out);
