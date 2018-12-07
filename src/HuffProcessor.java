@@ -137,6 +137,7 @@ public class HuffProcessor {
 		if (in.readBits(BITS_PER_WORD) == PSEUDO_EOF) {
 			code = codings[PSEUDO_EOF];
 			out.writeBits(code.length(), Integer.parseInt(code, 2));
+			return;
 		}
 		code = codings[in.readBits(BITS_PER_WORD)];
 		out.writeBits(code.length(), Integer.parseInt(code, 2));
