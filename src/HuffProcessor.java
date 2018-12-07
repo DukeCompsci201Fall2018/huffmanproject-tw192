@@ -104,9 +104,10 @@ public class HuffProcessor {
 		}
 		HuffNode root = pq.remove();
 		
-		if (myDebugLevel >= DEBUG_HIGH) {
-			System.out.printf("pq created with %d nodes\n", pq.size());
-		}
+		
+//		if (myDebugLevel >= DEBUG_HIGH) {
+//			System.out.printf("pq created with %d nodes\n", pq.size());
+//		}
 		
 		return root;
 	}
@@ -124,56 +125,54 @@ public class HuffProcessor {
 		codingHelper(root.myLeft, path + "0", encodings);
 		codingHelper(root.myRight, path + "1", encodings);
 		
-		if (root.myLeft == null && root.myRight == null) {
-			encodings[root.myValue] = path;
-			if (myDebugLevel >= DEBUG_HIGH) {
-				System.out.printf("encoding for %d is %s\n", root.myValue, path);
-			}
-			return;
-		}
+//		if (root.myLeft == null && root.myRight == null) {
+//			encodings[root.myValue] = path;
+//			if (myDebugLevel >= DEBUG_HIGH) {
+//				System.out.printf("encoding for %d is %s\n", root.myValue, path);
+//			}
+//			return;
+//		}
 	}
 	
 	private void writeHeader(HuffNode root, BitOutputStream out) {
 		if (root == null) {
 			return;
 		}
+//		if (root.myLeft == null && root.myRight == null) {
+//			out.writeBits(BITS_PER_INT, 1);
+//			out.writeBits(BITS_PER_WORD + 1, root.myValue);
+//		}
 		if (root.myLeft == null && root.myRight == null) {
-			out.writeBits(BITS_PER_INT, 1);
+			out.writeBits(1, 1);
 			out.writeBits(BITS_PER_WORD + 1, root.myValue);
 		}
-//		if (root.myLeft == null && root.myRight == null) {
-//			out.writeBits(1, 1);
-//			out.writeBits(BITS_PER_WORD + 1, root.myValue);
-//			//myBitsWritten += BITS_PER_WORD + 2; 
-//			//return;
-//		}
 		
-		out.writeBits(BITS_PER_INT, 0);
-		writeHeader(root.myLeft, out);
-		writeHeader(root.myRight, out);
+		else {
+			out.writeBits(1, 0);
+			//out.writeBits(BITS_PER_INT, 0);
+			writeHeader(root.myLeft, out);
+			writeHeader(root.myRight, out);
+		}
 	}
 	
 	private void writeCompressedBits(String[] codings, BitInputStream in, BitOutputStream out) {
 		String code = "";
 		
-		
 //		if bit != -1
 //				
-//				if == -1
+//		if bit == -1
 		while (true) {
 			int bit = in.readBits(BITS_PER_WORD);
-			if (bit == -1) {
+			
+			if (bit != -1) {
+				code = codings[bit];
+				out.writeBits(code.length(), Integer.parseInt(code, 2));
+			}
+			else {
 				code = codings[PSEUDO_EOF];
 				out.writeBits(code.length(), Integer.parseInt(code, 2));
 				break;
 			}
-//			if ((bit == PSEUDO_EOF)) {
-//				code = codings[PSEUDO_EOF];
-//				out.writeBits(code.length(), Integer.parseInt(code, 2));
-//				return;
-//			}
-			code = codings[bit];
-			out.writeBits(code.length(), Integer.parseInt(code, 2));
 		}
 	}
 	
