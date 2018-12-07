@@ -145,7 +145,7 @@ public class HuffProcessor {
 			out.writeBits(1, 1);
 			out.writeBits(BITS_PER_WORD + 1, root.myValue);
 			//myBitsWritten += BITS_PER_WORD + 2; 
-			return;
+			//return;
 		}
 		
 		out.writeBits(BITS_PER_INT, 0);
