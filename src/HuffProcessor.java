@@ -67,14 +67,16 @@ public class HuffProcessor {
 		freq[PSEUDO_EOF] = 1;
 		
 		while(true) {
+			int bit = in.readBits(BITS_PER_WORD);
+			
 			// Break when it reaches the end
-			if (in.readBits(BITS_PER_WORD) == -1) {
+			if (bit == -1) {
 				break;
 			}
 			
 			// The rest
 			else {
-				freq[in.readBits(BITS_PER_WORD)] += 1;
+				freq[bit] += 1;
 			}
 		}
 		return freq;
@@ -102,6 +104,10 @@ public class HuffProcessor {
 		}
 		HuffNode root = pq.remove();
 		
+		if (myDebugLevel >= DEBUG_HIGH) {
+			System.out.printf("pq created with %d nodes\n", pq.size());
+		}
+		
 		return root;
 	}
 	
@@ -117,6 +123,14 @@ public class HuffProcessor {
 		}
 		codingHelper(root.myLeft, path + "0", encodings);
 		codingHelper(root.myRight, path + "1", encodings);
+		
+		if (root.myLeft == null && root.myRight == null) {
+			encodings[root.myValue] = path;
+			if (myDebugLevel >= DEBUG_HIGH) {
+				System.out.printf("encoding for %d is %s\n", root.myValue, path);
+			}
+			return;
+		}
 	}
 	
 	private void writeHeader(HuffNode root, BitOutputStream out) {
